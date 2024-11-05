@@ -36,3 +36,446 @@
     transform: rotate(360deg);
   }
 }
+
+/* Map css */
+
+.map-card {
+  height: 730px;
+  width: 1000px;
+  margin-left: 260px;
+  padding: 50px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  font-family: "Arial", sans-serif;
+}
+
+.map-card h1 {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.map-card button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  margin: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.map-card button:hover {
+  background-color: #45a049;
+}
+
+.map-card button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.leaflet-container {
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: "Arial", sans-serif;
+}
+
+.leaflet-popup-content h3 {
+  font-size: 16px;
+  margin: 0 0 5px;
+  color: #333;
+}
+
+.leaflet-popup-content p {
+  margin: 0;
+  color: #555;
+}
+
+.container {
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  justify-content: flex-start; 
+  padding: 20px; 
+  background-color: #f9f9f9; 
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  gap: 20px; 
+}
+
+.form-control-label {
+  display: flex;
+  align-items: center; 
+  font-size: 16px;
+  color: #333; 
+}
+
+.icon-button {
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer; 
+  padding: 10px; 
+  background-color: #007bff; 
+  color: white;
+  border: none; 
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.icon-button:hover {
+  background-color: #0056b3; 
+  transform: scale(1.05); 
+}
+
+.icon {
+  font-size: 24px; 
+  margin: 10px;
+  margin-left: 100px;
+}
+
+.icon-container {
+  display: flex;
+  gap: 20px;
+}
+
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 10%; 
+  left: 50%;
+  margin-left: -60px; 
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; 
+}
+
+.modal {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  margin-left: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden; 
+  position: relative; 
+}
+
+.ButtonMenu {
+  display: flex;
+  gap: 10px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  left: 1px;
+  background: none;
+  border: none;
+  font-size: 5px;
+  cursor: pointer;
+}
+
+.member-list {
+  flex: 1;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  max-height: 400px;
+  overflow-y: auto; 
+}
+
+.form-container {
+  flex: 1;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 10px;
+}
+
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%; 
+  left: 50%;
+  margin-left: -60px; 
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.icon-remove {
+  cursor: pointer;
+  margin-left: 10px;
+  color: red; 
+  font-size: 1.3rem; 
+  transition: transform 0.2s, color 0.2s; 
+}
+
+.icon-remove:hover {
+  transform: scale(1.1); 
+  color: darkred; 
+}
+
+/* map css end */
+
+/* ----------------------------------------------------------- */
+
+/* Login css start */
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  animation: fadeIn 0.5s ease;
+}
+
+.auth-img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  animation: slideIn 0.7s ease;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  animation: scaleIn 0.5s ease;
+}
+
+.auth-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+  animation: fadeInUp 0.5s ease;
+}
+
+.form-control {
+  margin-bottom: 15px;
+  animation: bounceIn 0.5s ease;
+}
+
+.form-control label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+  transition: color 0.3s;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none;
+  animation: focusAnimation 0.3s ease;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.submit-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease;
+  z-index: 0;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.submit-button:hover::after {
+  width: 400%;
+  height: 400%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.toggle-auth {
+  margin-top: 15px;
+  background: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.toggle-auth:hover {
+  text-decoration: underline;
+  color: #0056b3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+      transform: scale(0.95);
+      opacity: 0;
+  }
+  to {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  60% {
+      opacity: 1;
+      transform: translateY(-10px);
+  }
+  to {
+      transform: translateY(0);
+  }
+}
+
+@keyframes focusAnimation {
+  0% {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  50% {
+      border-color: #0056b3;
+      box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
+  }
+  100% {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+}
+
+/* Login css end */
+
+
+/* ----------------------------------------------------------- */
+
