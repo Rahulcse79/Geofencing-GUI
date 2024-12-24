@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -18,8 +18,22 @@ import { IoSaveSharp } from "react-icons/io5";
 import { ImHistory } from "react-icons/im";
 import { RiMenuAddFill } from "react-icons/ri";
 import LiveImg from "../Images/live.png";
+import StartImg from "../Images/flag.png";
+import EndImg from "../Images/navigation.png";
 import { IoIosRemoveCircle } from 'react-icons/io';
 import { MdOutlineRemoveFromQueue } from "react-icons/md";
+import { FaClipboardList } from "react-icons/fa";
+export const DataContext = createContext();
+
+export const DataProvider = ({ children }) => {
+  const [isAlert, setIsAlert] = useState(false);
+
+  return (
+    <DataContext.Provider value={{ isAlert, setIsAlert }}>
+      {children}
+    </DataContext.Provider>
+  );
+};
 
 const Map = () => {
 
@@ -27,17 +41,20 @@ const Map = () => {
   const [username, setUserName] = useState("");
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const [locationHistory, setLocationHistory] = useState(false);
+  const [memberlocationHistory, setMemberLocationHistory] = useState(false);
   const [livelocation, setLivelocation] = useState({ latitude: 0, longitude: 0 });
   const [fetchLiveLocations, setfetchLiveLocations] = useState(false);
   const [LocationHistoryArray, setLocationHistoryArray] = useState([]);
+  const [memberLocationHistoryArray, setMemberLocationHistoryArray] = useState([]);
   const [polygonCoordinates, setPolygonCoordinates] = useState([]);
   const [CurrpolygonCoordinates, setCurrPolygonCoordinates] = useState([]);
   const [locations, setLocations] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newMember, setNewMember] = useState("");
-
   const [fetchLocations, setfetchLocations] = useState(false);
   const [members, setMembers] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const navigate = useNavigate();
   const CookieName = "mobile_tracker";
@@ -52,6 +69,39 @@ const Map = () => {
     popupAnchor: [1, -34],
   });
 
+  const historyLocationIconStart = new L.Icon({
+    iconUrl: StartImg,
+    iconSize: [35, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+
+  const historyLocationIconMiddle = new L.DivIcon({
+    html: '<div style="width: 8px; height: 8px; background-color: red; border-radius: 50%;"></div>',
+    className: 'custom-red-circle-icon',
+    iconSize: [8, 8],
+  });
+
+  const historyLocationIconEnd = new L.Icon({
+    iconUrl: EndImg,
+    iconSize: [25, 31],
+    iconAnchor: [12, 21],
+    popupAnchor: [1, -34],
+  });
+
+  function formatTimeToIST(time) {
+    return new Date(time).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+
   const centerPosition = [28.6210, 77.3828];
 
   // const checkDeviceOutsidePolygon = () => {
@@ -63,6 +113,48 @@ const Map = () => {
   //     }
   //   });
   // };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleUserSelect = async (user) => {
+    await setSelectedUser(user);
+    setIsDropdownOpen(false);
+    HandleLocationHistory(user);
+  };
+
+  const HandleLocationHistory = async (user) => {
+    try {
+      if (!Token) {
+        navigate("/");
+        return;
+      } else if (user === null) {
+        alert("First select member to fetch member location history.");
+        return;
+      } 
+      const TokenData = JSON.parse(Token);
+      let response = await fetch(
+        `http://${ServerIp}:${ServerPort}/api/member/location-history`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${TokenData.AuthToken}`,
+            "Content-Type": "application/json",
+            MemberUserName: user,
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.status === 1) {
+        setMemberLocationHistoryArray(data.LocationHistory);
+      } else {
+        alert("Failed to receive member location history.");
+      }
+    } catch (error) {
+      console.log("An error occurred while receiving member location history. Please try again later.");
+    }
+  };
 
   const getCoordinates = async () => {
     if (navigator.geolocation) {
@@ -86,8 +178,7 @@ const Map = () => {
         navigate("/");
         return;
       }
-      if(!isAlert && CurrpolygonCoordinates.length === 0)
-      {
+      if (!isAlert && CurrpolygonCoordinates.length === 0) {
         alert("First you set your geofencing area then start alert.");
         return;
       }
@@ -124,8 +215,7 @@ const Map = () => {
         navigate("/");
         return;
       }
-      if(members.length === 0)
-      {
+      if (members.length === 0) {
         alert("Member list should not be empty.");
         setfetchLocations(false);
       }
@@ -261,10 +351,6 @@ const Map = () => {
     setPolygonCoordinates([]);
   }
 
-  const HandleLocationHistory = () => {
-    console.log(LocationHistoryArray)
-  }
-
   const handleRemoveMember = (index) => {
     const updatedMembers = members.filter((_, i) => i !== index);
     setMembers(updatedMembers);
@@ -280,8 +366,7 @@ const Map = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(newMember === username)
-    {
+    if (newMember === username) {
       alert("Do not add self username");
       return;
     }
@@ -313,7 +398,7 @@ const Map = () => {
       const data = await response.json();
       if (data.status === 1) {
         setMembers(members);
-        alert("Members list updated successfully."); 
+        alert("Members list updated successfully.");
         window.location.reload();
       } else {
         alert(data.message || "Failed to set members.");
@@ -324,8 +409,7 @@ const Map = () => {
   };
 
   const HandleClearGeofencing = () => {
-    if(CurrpolygonCoordinates.length === 0)
-    {
+    if (CurrpolygonCoordinates.length === 0) {
       alert("Geofencing coordinates already clear.");
       return;
     }
@@ -347,6 +431,21 @@ const Map = () => {
         />
         <FormControlLabel
           control={<Switch checked={locationHistory} onChange={() => setLocationHistory(!locationHistory)} />}
+          label={<span className="form-control-label">My Location history</span>}
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={memberlocationHistory}
+              onChange={() => {
+                if (selectedUser == null) {
+                  alert("First select a member to fetch location history.");
+                  return;
+                }
+                setMemberLocationHistory(!memberlocationHistory);
+              }}
+            />
+          }
           label={<span className="form-control-label">Location history</span>}
         />
         <FormControlLabel
@@ -361,7 +460,7 @@ const Map = () => {
 
       <div className="icon-container">
         <div className="tooltip-container">
-          <ImHistory className="icon-button icon" onClick={HandleLocationHistory} />
+          <ImHistory className="icon-button icon" onClick={() => HandleLocationHistory(selectedUser)} />
           <span className="tooltip">Refresh History</span>
         </div>
         <div className="tooltip-container">
@@ -380,7 +479,43 @@ const Map = () => {
           <RiMenuAddFill className="icon-button icon" onClick={HandleAddMember} />
           <span className="tooltip">Add member</span>
         </div>
-
+        <div className="tooltip-container">
+          <FaClipboardList className="icon-button icon" onClick={toggleDropdown} />
+          <span className="tooltip">Member list</span>
+        </div>
+        <div>
+          {isDropdownOpen && (
+            <div className="overlay">
+              <div className="modal">
+                <button
+                  className="close-btn"
+                  onClick={() => setIsDropdownOpen(false)}
+                  title="Close"
+                >
+                  X
+                </button>
+                <div className="member-list">
+                  <h2>Select member to see location history</h2>
+                  <ul>
+                    {members.length > 0 ? (
+                      members.map((user, index) => (
+                        <li
+                          key={index}
+                          className={`dropdown-item ${selectedUser === user ? 'selected' : ''}`}
+                          onClick={() => handleUserSelect(user)}
+                        >
+                          {user}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="dropdown-item">Loading...</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
         <div>
           {showForm && (
             <div className="overlay">
@@ -425,7 +560,7 @@ const Map = () => {
         </div>
       </div>
 
-      {!showForm && (<MapContainer
+      {(!showForm && !isDropdownOpen) && (<MapContainer
         center={centerPosition}
         zoom={14}
         style={{ width: "100%", height: "600px" }}
@@ -452,6 +587,7 @@ const Map = () => {
             </Marker>
           )
         ))}
+
         {fetchLiveLocations && livelocation.latitude && livelocation.longitude && (
           <Marker position={[livelocation.latitude, livelocation.longitude]} icon={customIcon}>
             <Popup>
@@ -463,17 +599,91 @@ const Map = () => {
             </Popup>
           </Marker>
         )}
+
         {CurrpolygonCoordinates.length > 0 && (
           <Polygon positions={CurrpolygonCoordinates} pathOptions={{ color: "green" }} />
         )}
+
         {polygonCoordinates.length > 0 && (
           <Polygon positions={polygonCoordinates} pathOptions={{ color: "red" }} />
         )}
+
+        {polygonCoordinates.length > 0 && (
+          <Polygon positions={polygonCoordinates} pathOptions={{ color: "red" }} />
+        )}
+
         {locationHistory && LocationHistoryArray.length > 0 && (
-          <Polyline
-            positions={LocationHistoryArray.map(location => [location.coordinates[0], location.coordinates[1]])}
-            pathOptions={{ color: "red", weight: 5 }}
-          />
+          <>
+            {LocationHistoryArray
+              .sort((a, b) => new Date(a.time) - new Date(b.time))
+              .map((location, index) => (
+                <Marker
+                  key={location._id}
+                  position={[location.coordinates[0], location.coordinates[1]]}
+                  icon={index === 0 ? historyLocationIconStart : index === LocationHistoryArray.length - 1 ? historyLocationIconEnd : historyLocationIconMiddle}
+                >
+                  <Popup>
+                    <div>
+                      <p>Username: {username}</p>
+                      <p>Latitude: {location.coordinates[0]}</p>
+                      <p>Longitude: {location.coordinates[1]}</p>
+                      <p>Date & time: {formatTimeToIST(location.time)}</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            {LocationHistoryArray
+              .sort((a, b) => new Date(a.time) - new Date(b.time))
+              .map((location, index) => (
+                index < LocationHistoryArray.length - 1 && (
+                  <Polyline
+                    key={index}
+                    positions={[
+                      [LocationHistoryArray[index].coordinates[0], LocationHistoryArray[index].coordinates[1]],
+                      [LocationHistoryArray[index + 1].coordinates[0], LocationHistoryArray[index + 1].coordinates[1]]
+                    ]}
+                    pathOptions={{ color: "red" }}
+                  />
+                )
+              ))}
+          </>
+        )}
+
+        {memberlocationHistory && memberLocationHistoryArray.length > 0 && (
+          <>
+            {memberLocationHistoryArray
+              .sort((a, b) => new Date(a.time) - new Date(b.time))
+              .map((location, index) => (
+                <Marker
+                  key={location._id}
+                  position={[location.coordinates[0], location.coordinates[1]]}
+                  icon={index === 0 ? historyLocationIconStart : index === memberLocationHistoryArray.length - 1 ? historyLocationIconEnd : historyLocationIconMiddle}
+                >
+                  <Popup>
+                    <div>
+                      <p>Username: {selectedUser}</p>
+                      <p>Latitude: {location.coordinates[0]}</p>
+                      <p>Longitude: {location.coordinates[1]}</p>
+                      <p>Date & time: {formatTimeToIST(location.time)}</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            {memberLocationHistoryArray
+              .sort((a, b) => new Date(a.time) - new Date(b.time))
+              .map((location, index) => (
+                index < memberLocationHistoryArray.length - 1 && (
+                  <Polyline
+                    key={index}
+                    positions={[
+                      [memberLocationHistoryArray[index].coordinates[0], memberLocationHistoryArray[index].coordinates[1]],
+                      [memberLocationHistoryArray[index + 1].coordinates[0], memberLocationHistoryArray[index + 1].coordinates[1]]
+                    ]}
+                    pathOptions={{ color: "yellow" }}
+                  />
+                )
+              ))}
+          </>
         )}
       </MapContainer>)}
     </div>
