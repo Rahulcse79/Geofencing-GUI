@@ -61,8 +61,8 @@ const Map = () => {
   const Token = Cookies.get(CookieName);
   const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
   const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
-  const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}:${SERVER_PORT}`;
-  const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "http://";
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL || `${SERVER_IP}:${SERVER_PORT}`;
+  const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "https://";
 
 
   const customIcon = new L.Icon({
