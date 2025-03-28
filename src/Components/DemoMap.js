@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import L from 'leaflet';
 
 const DistanceMap = () => {
   const [selectedStart, setSelectedStart] = useState(null);
@@ -9,25 +8,21 @@ const DistanceMap = () => {
   const [steps, setSteps] = useState([]);
 
   const users = {
-    user1: [28.6210, 77.3828], // User 1 coordinates
-   
-    user4: [28.8210, 78.5828], // User 4 coordinates
+    user1: [28.6210, 77.3828],
+    user4: [28.8210, 78.5828],
   };
 
   const fetchRoute = async (start, end) => {
-    const apiKey = "5b3ce3597851110001cf6248aa7f0e4deb8c48529c9966a2fb592e34"; // Replace with your OpenRouteService API key
+    const apiKey = "5b3ce3597851110001cf6248aa7f0e4deb8c48529c9966a2fb592e34";
     const url = `https://api.openrouteservice.org/v2/directions/cycling-regular?api_key=${apiKey}&start=${start[1]},${start[0]}&end=${end[1]},${end[0]}`;
 
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log('API Response:', data);  // Log the response
-
+      console.log('API Response:', data); 
       if (data.routes && data.routes[0]) {
         const route = data.routes[0].geometry.coordinates;
         const steps = data.routes[0].segments[0].steps;
-
-        // Convert [lng, lat] to [lat, lng]
         const path = route.map((point) => [point[1], point[0]]);
         setRouteCoordinates(path);
         setSteps(steps);
@@ -41,7 +36,6 @@ const DistanceMap = () => {
 
   useEffect(() => {
     if (selectedStart && selectedEnd) {
-      // Fetch route when both start and end are selected
       fetchRoute(selectedStart, selectedEnd);
     }
   }, [selectedStart, selectedEnd]);

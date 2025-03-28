@@ -57,10 +57,13 @@ const Map = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const navigate = useNavigate();
-  const CookieName = "mobile_tracker";
+  const CookieName = process.env.REACT_APP_COOKIE_NAME_IP || "geofencing";
   const Token = Cookies.get(CookieName);
-  const ServerIp = "localhost";
-  const ServerPort = "9901";
+  const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
+  const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
+  const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}`;
+  const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "http://";
+
 
   const customIcon = new L.Icon({
     iconUrl: LiveImg,
@@ -104,16 +107,6 @@ const Map = () => {
 
   const centerPosition = [28.6210, 77.3828];
 
-  // const checkDeviceOutsidePolygon = () => {
-  //   const polygonLayer = L.polygon(polygonCoordinates);
-  //   locations.forEach((location) => {
-  //     const devicePosition = L.latLng(location.Latitude, location.Longitude);
-  //     if (!polygonLayer.getBounds().contains(devicePosition)) {
-  //       console.log("DeviceId outside polygon:", location.DeviceId);
-  //     }
-  //   });
-  // };
-
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -132,10 +125,10 @@ const Map = () => {
       } else if (user === null) {
         alert("First select member to fetch member location history.");
         return;
-      } 
+      }
       const TokenData = JSON.parse(Token);
       let response = await fetch(
-        `http://${ServerIp}:${ServerPort}/api/member/location-history`,
+        `${SERVER_SECURE}${SERVER_URL}/api/member/location-history`,
         {
           method: "GET",
           headers: {
@@ -185,7 +178,7 @@ const Map = () => {
       const TokenData = JSON.parse(Token);
       const newAlertState = !isAlert;
       const response = await fetch(
-        `http://${ServerIp}:${ServerPort}/api/setAlert`,
+        `${SERVER_SECURE}${SERVER_URL}/api/setAlert`,
         {
           method: "POST",
           headers: {
@@ -220,7 +213,7 @@ const Map = () => {
         setfetchLocations(false);
       }
       const TokenData = JSON.parse(Token);
-      const response = await fetch(`http://${ServerIp}:${ServerPort}/api/livelocation`, {
+      const response = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/livelocation`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${TokenData.AuthToken}`,
@@ -266,7 +259,7 @@ const Map = () => {
         }
         const TokenData = JSON.parse(Token);
         let response = await fetch(
-          `http://${ServerIp}:${ServerPort}/api/getUserData`,
+          `${SERVER_SECURE}${SERVER_URL}/api/getUserData`,
           {
             method: "GET",
             headers: {
@@ -320,7 +313,7 @@ const Map = () => {
       if (!Token) navigate("/");
       const TokenData = JSON.parse(Token);
       let response = await fetch(
-        `http://${ServerIp}:${ServerPort}/api/setgeofencing`,
+        `${SERVER_SECURE}${SERVER_URL}/api/setgeofencing`,
         {
           method: "POST",
           headers: {
@@ -383,7 +376,7 @@ const Map = () => {
       }
       const TokenData = JSON.parse(Token);
       const response = await fetch(
-        `http://${ServerIp}:${ServerPort}/api/setMember`,
+        `${SERVER_SECURE}${SERVER_URL}/api/setMember`,
         {
           method: "POST",
           headers: {

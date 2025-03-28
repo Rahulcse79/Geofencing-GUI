@@ -15,10 +15,12 @@ export default function LogIn() {
     const [showForgetForm, setShowForgetForm] = useState(false);
     const [showChangeForm, setShowChangeForm] = useState(false);
     const [showSignUpForm, setShowSignUpForm] = useState(false);
-    const CookieName = "mobile_tracker";
+    const CookieName = process.env.REACT_APP_COOKIE_NAME_IP || "geofencing";
     const navigate = useNavigate();
-    const ServerIp = "localhost";
-    const ServerPort = "9901";
+    const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
+    const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
+    const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}`;
+    const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "http://";
 
     useEffect(() => {
         if (!timerShow) return;
@@ -53,7 +55,7 @@ export default function LogIn() {
             return;
         }
         try {
-            let result = await fetch(`http://${ServerIp}:${ServerPort}/api/login`, {
+            let result = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -108,7 +110,7 @@ export default function LogIn() {
             return;
         }
         try {
-            const response = await fetch(`http://${ServerIp}:${ServerPort}/api/reset-password`, {
+            const response = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -137,7 +139,7 @@ export default function LogIn() {
             return;
         }
         try {
-            const response = await fetch(`http://${ServerIp}:${ServerPort}/api/send-otp`, {
+            const response = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/send-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -175,7 +177,7 @@ export default function LogIn() {
             return;
         }
         try {
-            const response = await fetch(`http://${ServerIp}:${ServerPort}/api/change-password`, {
+            const response = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -238,7 +240,7 @@ export default function LogIn() {
             return;
         }
         try {
-            const response = await fetch(`http://${ServerIp}:${ServerPort}/api/signup`, {
+            const response = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

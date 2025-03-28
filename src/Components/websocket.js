@@ -6,14 +6,16 @@ const Device1 = () => {
   const [coordinates, setCoordinates] = useState({ latitude: null, longitude: null });
   const [isConnected, setIsConnected] = useState(false);
   const [websocketOnAndOff, setWebsocketOnAndOff] = useState(false);
-  const CookieName = "mobile_tracker";
+  const CookieName = process.env.REACT_APP_COOKIE_NAME_IP || "geofencing";
   const Token = Cookies.get(CookieName);
   const TokenData = JSON.parse(Token);
-  const ServerIp = "localhost";
-  const ServerPort = "9901";
+  const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
+  const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
+  const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}`;
+  const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "http://";
 
   const connectWebSocket = () => {
-    const socket = new WebSocket(`ws://${ServerIp}:${ServerPort}`, TokenData.AuthToken);
+    const socket = new WebSocket(`ws://${SERVER_SECURE}${SERVER_URL}`, TokenData.AuthToken);
     socket.onopen = () => {
       console.log('WebSocket connection established');
       setWs(socket);

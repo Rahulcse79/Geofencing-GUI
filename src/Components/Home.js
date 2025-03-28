@@ -4,11 +4,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import DashboardCard from "./Helper/Cards";
 import { CiLocationArrow1 } from "react-icons/ci";
 import { MdOutlineFamilyRestroom, MdOutlineCrisisAlert, MdOutlinePregnantWoman } from "react-icons/md";
-import { DataContext } from './Helper/Map';
 
 export default function Home() {
-
-  // const { isAlert, setIsAlert } = useContext(DataContext);
 
   return (
     <>
