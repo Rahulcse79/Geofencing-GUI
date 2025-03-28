@@ -19,7 +19,7 @@ export default function LogIn() {
     const navigate = useNavigate();
     const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
     const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
-    const SERVER_URL = process.env.REACT_APP_SERVER_URL || `${SERVER_IP}:${SERVER_PORT}`; 
+    const SERVER_URL = process.env.REACT_APP_SERVER_URL || `geofencing-server.onrender.com`; 
     const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "https://";
 
     useEffect(() => {
