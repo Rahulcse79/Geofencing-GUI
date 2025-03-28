@@ -19,7 +19,7 @@ export default function LogIn() {
     const navigate = useNavigate();
     const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
     const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
-    const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}${SERVER_PORT}`;
+    const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}:${SERVER_PORT}`;
     const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "http://";
 
     useEffect(() => {
@@ -138,6 +138,7 @@ export default function LogIn() {
             alert('Please enter a valid username.');
             return;
         }
+        console.log(`${SERVER_SECURE}${SERVER_URL}/api/send-otp`);
         try {
             const response = await fetch(`${SERVER_SECURE}${SERVER_URL}/api/send-otp`, {
                 method: 'POST',

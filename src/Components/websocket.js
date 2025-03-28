@@ -11,7 +11,7 @@ const Device1 = () => {
   const TokenData = JSON.parse(Token);
   const SERVER_IP = process.env.REACT_APP_SERVER_IP || "localhost";
   const SERVER_PORT = process.env.REACT_APP_SERVER_PORT || "9901";
-  const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}${SERVER_PORT}`;
+  const SERVER_URL = process.env.SERVER_URL || `${SERVER_IP}:${SERVER_PORT}`;
   const SERVER_SECURE = process.env.REACT_APP_SERVER_SECURE || "http://";
 
   const connectWebSocket = () => {
